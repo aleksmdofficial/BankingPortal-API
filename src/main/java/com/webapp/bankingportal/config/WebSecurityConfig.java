@@ -78,7 +78,6 @@ public class WebSecurityConfig {
                 .sessionManagement(management -> {
                     management.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 })
-
                 .logout(logout -> logout
                         .logoutSuccessHandler((request, response, authentication) -> {
                             response.setStatus(HttpServletResponse.SC_OK);

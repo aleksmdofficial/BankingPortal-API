@@ -3,6 +3,7 @@ package com.webapp.bankingportal.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.webapp.bankingportal.repository.AccountRepository;
 import org.springframework.stereotype.Service;
 
 import com.webapp.bankingportal.dto.TransactionDTO;
@@ -18,6 +19,8 @@ public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final TransactionMapper transactionMapper;
+    private final EmailService emailService;
+    private final AccountRepository accountRepository;
 
     @Override
     public List<TransactionDTO> getAllTransactionsByAccountNumber(String accountNumber) {
@@ -30,6 +33,25 @@ public class TransactionServiceImpl implements TransactionService {
                 .collect(Collectors.toList());
 
         return transactionDTOs;
+    }
+    public void sendBankStatementByEmail(String accountNumber) {
+        List<TransactionDTO> transactions = getAllTransactionsByAccountNumber(accountNumber);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Bank Statement for Account: ").append(accountNumber).append("\n\n");
+
+        for(TransactionDTO txn : transactions) {
+            sb.append("Date: ").append(txn.getTransactionDate())
+                    .append(", Type: ").append(txn.getTransactionType())
+                    .append(", Amount: ").append(txn.getAmount())
+                    .append("\n");
+        }
+
+        String email = accountRepository.findByAccountNumber(accountNumber)
+                .getUser()
+                .getEmail();
+
+        emailService.sendEmail(email, "Your Bank Statement", sb.toString());
     }
 
 }

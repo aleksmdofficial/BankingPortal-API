@@ -7,5 +7,6 @@ import com.webapp.bankingportal.dto.TransactionDTO;
 public interface TransactionService {
 
 	List<TransactionDTO> getAllTransactionsByAccountNumber(String accountNumber);
+	void sendBankStatementByEmail(String accountNumber);
 
 }
