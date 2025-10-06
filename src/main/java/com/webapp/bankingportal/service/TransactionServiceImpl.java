@@ -47,10 +47,12 @@ public class TransactionServiceImpl implements TransactionService {
                     .append("\n");
         }
 
-        String email = accountRepository.findByAccountNumber(accountNumber)
-                .getUser()
-                .getEmail();
-
+        val account = accountRepository.findByAccountNumber(accountNumber);
+        if (account == null || account.getUser() == null) {
+            // Optionally log or handle the error here
+            return;
+        }
+        String email = account.getUser().getEmail();
         emailService.sendEmail(email, "Your Bank Statement", sb.toString());
     }
 
