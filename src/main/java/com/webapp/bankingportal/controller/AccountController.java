@@ -92,7 +92,7 @@ public class AccountController {
         return ResponseEntity.ok(JsonUtil.toJson(transactions));
     }
     @GetMapping("/send-statement")
-    public ResponseEntity<String> sendBankStatement(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<String> sendBankStatement() {
         String accountNumber = LoggedinUser.getAccountNumber(); // Get logged-in user account
         transactionService.sendBankStatementByEmail(accountNumber);
         return ResponseEntity.ok("{\"message\": \"Bank statement sent to your email.\"}");
